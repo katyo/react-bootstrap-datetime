@@ -1,0 +1,54 @@
+{
+  "name": "react-bootstrap-datetime",
+  "version": "0.0.1",
+  "description": "Date and Time selects for ReactJS powered by Bootstrap 3.",
+  "main": "lib.js",
+  "scripts": {
+    "prepublish": "browserify lib.coffee -x moment -x react -x react-bootstrap -do lib.js",
+    "development": "watchify example.coffee -do example.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/katyo/react-bootstrap-datetime.git"
+  },
+  "keywords": [
+    "react",
+    "bootstrap",
+    "date",
+    "time",
+    "select",
+    "picker",
+    "form",
+    "component"
+  ],
+  "author": "K. <kayo@illumium.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/katyo/react-bootstrap-datetime/issues"
+  },
+  "dependencies": {
+  },
+  "peerDependencies": {
+    "moment": "^2.10.2",
+    "react": "^0.13.1",
+    "react-bootstrap": "^0.20.3"
+  },
+  "devDependencies": {
+    "browserify": "^9.0.8",
+    "coffeeify": "^1.0.0",
+    "watchify": "^3.1.1",
+    "minifyify": "^6.4.0",
+    "bootstrap": "^3.3.4"
+  },
+  "browser": {
+    "react-bootstrap-datetime": "./lib.coffee"
+  },
+  "browserify": {
+    "transform": [
+      "coffeeify"
+    ],
+    "extensions": [
+      ".coffee"
+    ]
+  }
+}
