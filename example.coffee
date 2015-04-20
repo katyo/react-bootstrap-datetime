@@ -15,27 +15,26 @@ langs =
 
 Example = createClass
   getInitialState: ->
-    moment.locale "en"
-    lang: "en"
-  setLocale: (lang)-> =>
-    moment.locale lang
-    @setState {lang}
+    locale: "en"
+  setLocale: (locale)-> =>
+    @setState {locale}
   handleChange: ->
     @setState time: do @refs.time.getValue
   render: ->
-    {lang} = @state
+    {locale, time} = @state
     createElement Panel,
       header: "Date and time picker"
       createElement ButtonToolbar, null,
         for langCode, langName of langs
           createElement Button,
             key: langCode
-            bsStyle: if langCode is lang then "primary" else "link"
+            bsStyle: if langCode is locale then "primary" else "link"
             onClick: @setLocale langCode
             langName
       createElement DateTime,
         label: "Simple date and time"
         help: "You can to change date and time here."
+        locale: locale
       createElement DateTime,
         label: "Custom display format date"
         help: "Link style without icon."
