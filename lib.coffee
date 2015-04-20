@@ -34,6 +34,7 @@ PickerMixin =
     format: PropTypes.string
     value: PropTypes.string
     defaultValue: PropTypes.string
+    locale: PropTypes.string
   
   getDefaultProps: ->
     format: defaultFormat
@@ -63,9 +64,11 @@ PickerMixin =
     format.split formatRegex
   
   getMoment: ->
-    {format} = @props
+    {format, locale} = @props
     {value} = @state
-    moment value, format
+    datetime = moment value, format
+    datetime.locale locale if locale
+    datetime
   
   getValue: ->
     @state.value
