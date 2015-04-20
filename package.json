@@ -5,7 +5,7 @@
   "main": "lib.js",
   "scripts": {
     "prepublish": "browserify lib.coffee -u moment -u react -u react-bootstrap -s ReactBootstrapDateTime -do lib.js",
-    "development": "watchify example.coffee -do example.js"
+    "development": "watchify -t coffeeify --extension=.coffee -r ./lib.coffee:react-bootstrap-datetime example.coffee -do example.js"
   },
   "repository": {
     "type": "git",
@@ -34,21 +34,8 @@
     "react-bootstrap": "^0.20.3"
   },
   "devDependencies": {
-    "browserify": "^9.0.8",
     "coffeeify": "^1.0.0",
     "watchify": "^3.1.1",
-    "minifyify": "^6.4.0",
     "bootstrap": "^3.3.4"
-  },
-  "browser": {
-    "react-bootstrap-datetime": "./lib.coffee"
-  },
-  "browserify": {
-    "transform": [
-      "coffeeify"
-    ],
-    "extensions": [
-      ".coffee"
-    ]
   }
 }
