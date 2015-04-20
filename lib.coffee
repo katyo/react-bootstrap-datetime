@@ -1,5 +1,29 @@
-{createClass, createElement, DOM:{div, table, thead, tbody, th, tr, td}, PropTypes} = require "react"
-{Input, ButtonToolbar, ButtonGroup, Button, DropdownButton, MenuItem, Table, Glyphicon} = require "react-bootstrap"
+{
+  createClass
+  createElement
+  createFactory
+  DOM: {
+    table
+    thead
+    tbody
+    th
+    tr
+    td
+  }
+  PropTypes
+} = require "react"
+
+{
+  Input
+  ButtonToolbar
+  ButtonGroup
+  Button
+  DropdownButton
+  MenuItem
+  Table
+  Glyphicon
+} = require "react-bootstrap"
+
 moment = require "moment"
 {defaultFormat} = moment
 
