@@ -389,7 +389,7 @@ DateTime = createClass
   viewMonths: ->
     @setState dateView: "months"
 
-  changeValue: (field)->
+  updateValue: (field)->
     value = do @refs[field].getValue
     {onChange} = @props
     if onChange?
@@ -398,18 +398,18 @@ DateTime = createClass
       @setState {value}
 
   handleYear: ->
-    @changeValue "year"
+    @updateValue "year"
     do @viewDays
 
   handleMonth: ->
-    @changeValue "month"
+    @updateValue "month"
     do @viewDays
   
   handleDay: ->
-    @changeValue "day"
+    @updateValue "day"
   
   handleTime: ->
-    @changeValue "time"
+    @updateValue "time"
   
   render: ->
     {label, help, addonBefore, addonAfter, format, datePart, timePart, dateGlyph, timeGlyph, dropup, bsStyle} = @props
