@@ -62,7 +62,7 @@ PickerMixin =
   parseFormat: (format)->
     format.split formatRegex
   
-  moment: ->
+  getMoment: ->
     {format} = @props
     {value} = @state
     moment value, format
@@ -105,7 +105,7 @@ YearPicker = createClass
     @setState view: "days"
   
   render: ->
-    datetime = do @moment
+    datetime = do @getMoment
     
     {yearsRange} = @props
     {yearsOffset} = @state
@@ -158,7 +158,7 @@ MonthPicker = createClass
     @changeValue -> @month mon
   
   render: ->
-    datetime = do @moment
+    datetime = do @getMoment
 
     activeMonth = do datetime.month
 
@@ -197,7 +197,7 @@ DatePicker = createClass
   
   render: ->
     {onClickYear, onClickMonth} = @props
-    datetime = do @moment
+    datetime = do @getMoment
 
     activeDate = do datetime.date
     monthDays = do datetime.daysInMonth
@@ -299,7 +299,7 @@ TimePicker = createClass
   toggleAPM: -> @changeValue -> if 12 >= do @hour then @add 12, "h" else @subtract 12, "h"
   
   render: ->
-    datetime = do @moment
+    datetime = do @getMoment
     tokens = @parseFormat @props.display
     
     table null,
