@@ -374,6 +374,9 @@ DateTime = createClass
   componentWillReceiveProps: ({value})->
     @setState {value} if value?
 
+  getValue: ->
+    @state.value
+  
   viewDays: ->
     @setState dateView: "days"
 
