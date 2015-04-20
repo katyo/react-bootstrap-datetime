@@ -23,15 +23,18 @@ PickerMixin =
   componentWillReceiveProps: ({value})->
     # We need update value in state only when it differs from existing value
     @setState {value} if value? and value isnt @state.value
+
+  setValue: (value)->
+    # Set new value and call onChange handler
+    @setState {value}, @props.onChange if value? and value isnt @state.value
   
   changeValue: (fn)->
     {format, onChange} = @props
     {value} = @state
     date = moment value, format
     fn.call date
-    value = date.format format
-    @setState {value}, onChange
-
+    @setValue date.format format
+  
   parseFormat: (format)->
     format.split formatRegex
   
