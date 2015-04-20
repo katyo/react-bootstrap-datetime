@@ -21,7 +21,8 @@ PickerMixin =
     {value}
   
   componentWillReceiveProps: ({value})->
-    @setState {value} if value?
+    # We need update value in state only when it differs from existing value
+    @setState {value} if value? and value isnt @state.value
   
   changeValue: (fn)->
     {format, onChange} = @props
