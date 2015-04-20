@@ -12,9 +12,8 @@ PickerMixin =
     defaultValue: PropTypes.string
   
   getDefaultProps: ->
-    format = defaultFormat
-    defaultValue = (do moment).format format
-    {format, defaultValue}
+    format: defaultFormat
+    defaultValue: (do moment).format defaultFormat
   
   getInitialState: ->
     {value, defaultValue} = @props
