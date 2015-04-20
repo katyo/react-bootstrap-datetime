@@ -5,7 +5,7 @@ moment = require "moment"
 
 formatRegex = /([QeEAaXx]|M{1,4}o?|D{1,4}o?|d{1,4}o?|w{1,2}o?|W{1,2}o?|Y{2,4}|g{2,4}|G{2,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|S{1,3}|z{1,2}|Z{1,2})/
 
-PickerMixin = @PickerMixin =
+PickerMixin =
   getDefaultProps: ->
     format = defaultFormat
     defaultValue = (do moment).format format
@@ -44,7 +44,7 @@ PickerMixin = @PickerMixin =
     delta *= n
     @changeValue -> @add delta, p
 
-YearPicker = @YearPicker = createClass
+YearPicker = createClass
   mixins: [
     PickerMixin
   ]
@@ -116,7 +116,7 @@ YearPicker = @YearPicker = createClass
                     onClick: @pickYear year
                     year
 
-MonthPicker = @MonthPicker = createClass
+MonthPicker = createClass
   mixins: [
     PickerMixin
   ]
@@ -146,7 +146,7 @@ MonthPicker = @MonthPicker = createClass
                   onClick: @pickMon month
                   (moment month + 1, "M").format "MMMM"
 
-DatePicker = @DatePicker = createClass
+DatePicker = createClass
   mixins: [
     PickerMixin
   ]
@@ -243,7 +243,7 @@ DatePicker = @DatePicker = createClass
                     onClick: @pickDate date
                     date
 
-TimePicker = @TimePicker = createClass
+TimePicker = createClass
   mixins: [
     PickerMixin
   ]
@@ -345,7 +345,7 @@ TimePicker = @TimePicker = createClass
                     createElement Glyphicon,
                       glyph: "chevron-down"
 
-@DateTime = createClass
+DateTime = createClass
   propTypes: ->
     label: PropTypes.string
     help: PropTypes.string
@@ -458,3 +458,12 @@ TimePicker = @TimePicker = createClass
                   display: timePart
                   onChange: @handleTime
                   value: value
+
+module.exports = {
+  PickerMixin
+  YearPicker
+  MonthPicker
+  DatePicker
+  TimePicker
+  DateTime
+}
