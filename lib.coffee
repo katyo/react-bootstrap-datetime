@@ -37,18 +37,22 @@ PickerMixin =
     locale: PropTypes.string
   
   getDefaultProps: ->
+    locale: do moment.locale
     format: defaultFormat
     defaultValue: (do moment).format defaultFormat
   
   getInitialState: ->
-    {value, defaultValue} = @props
+    {value, defaultValue, locale} = @props
+    @setLocale? locale if locale?
     value ?= defaultValue
     {value}
   
-  componentWillReceiveProps: ({value})->
+  componentWillReceiveProps: ({value, locale})->
     # We need update value in state only when it differs from existing value
     @setState {value} if value? and value isnt @state.value
-
+    # We need reconfigure locale when it changed
+    @setLocale? locale if locale? and locale isnt @props.locale
+  
   setValue: (value)->
     # Set new value and call onChange handler
     @setState {value}, @props.onChange if value? and value isnt @state.value
@@ -158,6 +162,10 @@ MonthPicker = createClass
   pickMon: (mon)-> =>
     @modifyValue -> @month mon
   
+  setLocale: (locale)->
+    datetime = do moment
+    datetime.locale locale
+    @monthName = ((datetime.month month).format "MMMM" for month in [0...12])
   render: ->
     datetime = do @getMoment
 
@@ -178,7 +186,7 @@ MonthPicker = createClass
                 createElement Button,
                   bsStyle: if month is activeMonth then "primary" else "link"
                   onClick: @pickMon month
-                  (moment month + 1, "M").format "MMMM"
+                  @monthName[month]
 
 DatePicker = createClass
   mixins: [
@@ -195,6 +203,11 @@ DatePicker = createClass
   
   pickDate: (date)-> =>
     @modifyValue -> @date date
+
+  setLocale: (locale)->
+    datetime = do moment
+    datetime.locale locale
+    @weekdayName = ((datetime.weekday weekday).format "ddd" for weekday in [0...7])
   
   render: ->
     {onClickYear, onClickMonth} = @props
@@ -260,7 +273,7 @@ DatePicker = createClass
               key: day
               style:
                 textAlign: "center"
-              (moment day, "e").format "ddd"
+              @weekdayName[day]
         for week in [firstWeek..lastWeek]
           tr
             key: week
@@ -424,9 +437,9 @@ DateTime = createClass
     @updateValue "time"
   
   render: ->
-    {label, help, addonBefore, addonAfter, format, datePart, timePart, dateGlyph, timeGlyph, dropup, bsStyle} = @props
+    {label, help, addonBefore, addonAfter, format, datePart, timePart, dateGlyph, timeGlyph, dropup, bsStyle, locale} = @props
     {value, dateView} = @state
-    datetime = moment value, format
+    datetime = do @getMoment
     
     createElement Input, {label, help, addonBefore, addonAfter},
       createElement ButtonToolbar, null,
@@ -451,6 +464,7 @@ DateTime = createClass
                 header: yes
                 createElement DatePicker,
                   ref: "day"
+                  locale: locale
                   format: format
                   onChange: @handleDay
                   onClickYear: @viewYears
@@ -462,6 +476,7 @@ DateTime = createClass
                 header: yes
                 createElement MonthPicker,
                   ref: "month"
+                  locale: locale
                   format: format
                   onChange: @handleMonth
                   value: value
@@ -471,6 +486,7 @@ DateTime = createClass
                 header: yes
                 createElement YearPicker,
                   ref: "year"
+                  locale: locale
                   format: format
                   onChange: @handleYear
                   value: value
@@ -492,6 +508,7 @@ DateTime = createClass
                 header: yes
                 createElement TimePicker,
                   ref: "time"
+                  locale: locale
                   format: format
                   display: timePart
                   onChange: @handleTime
