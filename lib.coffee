@@ -355,34 +355,22 @@ TimePicker = createClass
                       glyph: "chevron-down"
 
 DateTime = createClass
+  mixins: [
+    PickerMixin
+  ]
+  
   propTypes: ->
     label: PropTypes.string
     help: PropTypes.string
-    format: PropTypes.string
-    display: PropTypes.string
-    value: PropTypes.string
-    defaultValue: PropTypes.string
   
   getDefaultProps: ->
-    format = defaultFormat
-    
-    format: format
     datePart: "YYYY-MM-DD"
     timePart: "HH:mm:ss"
     dateGlyph: "calendar"
     timeGlyph: "time"
-    defaultValue: (do moment).format format
   
   getInitialState: ->
-    {value, defaultValue} = @props
-    value ?= defaultValue
-    {value, dateView: "days"}
-  
-  componentWillReceiveProps: ({value})->
-    @setState {value} if value?
-
-  getValue: ->
-    @state.value
+    dateView: "days"
   
   viewDays: ->
     @setState dateView: "days"
@@ -394,17 +382,12 @@ DateTime = createClass
     @setState dateView: "months"
 
   updateValue: (field)->
-    value = do @refs[field].getValue
-    {onChange} = @props
-    if onChange?
-      onChange value
-    else
-      @setState {value}
+    @setValue do @refs[field].getValue
 
   handleYear: ->
     @updateValue "year"
     do @viewDays
-
+  
   handleMonth: ->
     @updateValue "month"
     do @viewDays
