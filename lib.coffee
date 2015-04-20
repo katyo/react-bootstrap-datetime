@@ -38,8 +38,9 @@ PickerMixin =
   getValue: ->
     @state.value
 
-  tune: ({deltaX, deltaY}, p, n = 1)->
-    delta = deltaY or deltaX
+  tune: (e, p, n = 1)->
+    do e.preventDefault
+    delta = e.deltaY or e.deltaX
     delta /= -Math.abs delta
     delta *= n
     @changeValue -> @add delta, p

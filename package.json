@@ -1,6 +1,6 @@
 {
   "name": "react-bootstrap-datetime",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Date and Time selects for ReactJS powered by Bootstrap 3.",
   "main": "lib.js",
   "scripts": {
