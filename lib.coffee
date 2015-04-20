@@ -71,7 +71,7 @@ PickerMixin =
   getValue: ->
     @state.value
 
-  tune: (e, p, n = 1)->
+  wheelValue: (e, p, n = 1)->
     do e.preventDefault
     delta = e.deltaY or e.deltaX
     delta /= -Math.abs delta
@@ -189,9 +189,9 @@ DatePicker = createClass
     
   nextMon: -> @modifyValue -> @add 1, "M"
 
-  tuneMon: (e)-> @tune e, "M", -1
+  wheelMon: (e)-> @wheelValue e, "M", -1
 
-  tuneYear: (e)-> @tune e, "Y", -1
+  wheelYear: (e)-> @wheelValue e, "Y", -1
   
   pickDate: (date)-> =>
     @modifyValue -> @date date
@@ -234,7 +234,7 @@ DatePicker = createClass
               textAlign: "center"
             createElement Button,
               bsStyle: "link"
-              onWheel: @tuneYear
+              onWheel: @wheelYear
               onClick: onClickYear
               datetime.format "YYYY"
           th
@@ -243,7 +243,7 @@ DatePicker = createClass
               textAlign: "center"
             createElement Button,
               bsStyle: "link"
-              onWheel: @tuneMon
+              onWheel: @wheelMon
               onClick: onClickMonth
               datetime.format "MMMM"
           th null,
@@ -285,18 +285,18 @@ TimePicker = createClass
   getDefaultProps: ->
     display: "HH:mm:ss"
 
-  tuneHour: (e)-> @tune e, "h"
   prevHour: -> @modifyValue -> @subtract 1, "h"
   nextHour: -> @modifyValue -> @add 1, "h"
+  wheelHour: (e)-> @wheelValue e, "h"
 
-  tuneMin: (e)-> @tune e, "m"
   prevMin: -> @modifyValue -> @subtract 1, "m"
   nextMin: -> @modifyValue -> @add 1, "m"
+  wheelMin: (e)-> @wheelValue e, "m"
   
-  tuneSec: (e)-> @tune e, "s"
 
   prevSec: -> @modifyValue -> @subtract 1, "s"
   nextSec: -> @modifyValue -> @add 1, "s"
+  wheelSec: (e)-> @wheelValue e, "s"
   toggleAPM: -> @modifyValue -> if 12 >= do @hour then @add 12, "h" else @subtract 12, "h"
   
   render: ->
@@ -336,17 +336,17 @@ TimePicker = createClass
                 when /^[Hh]/.test token
                   createElement Button,
                     bsStyle: "link"
-                    onWheel: @tuneHour
+                    onWheel: @wheelHour
                     datetime.format token
                 when /^m/.test token
                   createElement Button,
                     bsStyle: "link"
-                    onWheel: @tuneMin
+                    onWheel: @wheelMin
                     datetime.format token
                 when /^s/.test token
                   createElement Button,
                     bsStyle: "link"
-                    onWheel: @tuneSec
+                    onWheel: @wheelSec
                     datetime.format token
                 when /^[aA]/.test token
                   createElement Button,
