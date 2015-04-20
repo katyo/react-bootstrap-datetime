@@ -53,12 +53,10 @@ PickerMixin =
     # Set new value and call onChange handler
     @setState {value}, @props.onChange if value? and value isnt @state.value
   
-  changeValue: (fn)->
-    {format, onChange} = @props
-    {value} = @state
-    date = moment value, format
-    fn.call date
-    @setValue date.format format
+  modifyValue: (fn)->
+    datetime = do @getMoment
+    fn.call datetime
+    @setValue datetime.format @props.format
   
   parseFormat: (format)->
     format.split formatRegex
@@ -78,7 +76,7 @@ PickerMixin =
     delta = e.deltaY or e.deltaX
     delta /= -Math.abs delta
     delta *= n
-    @changeValue -> @add delta, p
+    @modifyValue -> @add delta, p
 
 YearPicker = createClass
   mixins: [
@@ -104,7 +102,7 @@ YearPicker = createClass
     @pageYears 1
   
   pickYear: (year)-> =>
-    @changeValue -> @year year
+    @modifyValue -> @year year
     @setState view: "days"
   
   render: ->
@@ -158,7 +156,7 @@ MonthPicker = createClass
   ]
   
   pickMon: (mon)-> =>
-    @changeValue -> @month mon
+    @modifyValue -> @month mon
   
   render: ->
     datetime = do @getMoment
@@ -187,16 +185,16 @@ DatePicker = createClass
     PickerMixin
   ]
   
-  prevMon: -> @changeValue -> @subtract 1, "M"
+  prevMon: -> @modifyValue -> @subtract 1, "M"
     
-  nextMon: -> @changeValue -> @add 1, "M"
+  nextMon: -> @modifyValue -> @add 1, "M"
 
   tuneMon: (e)-> @tune e, "M", -1
 
   tuneYear: (e)-> @tune e, "Y", -1
   
   pickDate: (date)-> =>
-    @changeValue -> @date date
+    @modifyValue -> @date date
   
   render: ->
     {onClickYear, onClickMonth} = @props
@@ -287,19 +285,19 @@ TimePicker = createClass
   getDefaultProps: ->
     display: "HH:mm:ss"
 
-  prevHour: -> @changeValue -> @subtract 1, "h"
-  nextHour: -> @changeValue -> @add 1, "h"
   tuneHour: (e)-> @tune e, "h"
+  prevHour: -> @modifyValue -> @subtract 1, "h"
+  nextHour: -> @modifyValue -> @add 1, "h"
 
-  prevMin: -> @changeValue -> @subtract 1, "m"
-  nextMin: -> @changeValue -> @add 1, "m"
   tuneMin: (e)-> @tune e, "m"
+  prevMin: -> @modifyValue -> @subtract 1, "m"
+  nextMin: -> @modifyValue -> @add 1, "m"
   
-  prevSec: -> @changeValue -> @subtract 1, "s"
-  nextSec: -> @changeValue -> @add 1, "s"
   tuneSec: (e)-> @tune e, "s"
 
-  toggleAPM: -> @changeValue -> if 12 >= do @hour then @add 12, "h" else @subtract 12, "h"
+  prevSec: -> @modifyValue -> @subtract 1, "s"
+  nextSec: -> @modifyValue -> @add 1, "s"
+  toggleAPM: -> @modifyValue -> if 12 >= do @hour then @add 12, "h" else @subtract 12, "h"
   
   render: ->
     datetime = do @getMoment
