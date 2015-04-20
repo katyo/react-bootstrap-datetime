@@ -20,6 +20,8 @@ Example = createClass
   setLocale: (lang)-> =>
     moment.locale lang
     @setState {lang}
+  handleChange: ->
+    @setState time: do @refs.time.getValue
   render: ->
     {lang} = @state
     createElement Panel,
@@ -43,10 +45,12 @@ Example = createClass
         noCaret: yes
       createElement DateTime,
         label: "Custom display format time"
-        help: "With warning style applied."
+        help: "With warning style applied. Current time #{time or "now"}"
         datePart: no
         bsStyle: "warning"
         timePart: "hh:mm A"
+        ref: "time"
+        onChange: @handleChange
       createElement DateTime,
         label: "Default 13 Jan 2008"
         help: "Drop up with succes style."
