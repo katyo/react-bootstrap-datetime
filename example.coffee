@@ -1,6 +1,7 @@
 {render, createClass, createElement} = require "react"
 {Panel, ButtonToolbar, Button} = require "react-bootstrap"
-{DateTime} = require "react-bootstrap-datetime"
+#{DateTime} = require "react-bootstrap-datetime"
+{DateTime} = require "./lib.coffee"
 moment = require "moment"
 require "moment/locale/ru"
 require "moment/locale/it"

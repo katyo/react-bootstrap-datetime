@@ -357,11 +357,14 @@ DateTime = createClass
   
   getDefaultProps: ->
     format = defaultFormat
-    datePart = "YYYY-MM-DD"
-    timePart = "HH:mm:ss"
-    defaultValue = (do moment).format format
     
-    {format, datePart, timePart, defaultValue}
+    format: format
+    datePart: "YYYY-MM-DD"
+    timePart: "HH:mm:ss"
+    noCaret: yes
+    dateGlyph: "calendar"
+    timeGlyph: "time"
+    defaultValue: (do moment).format format
   
   getInitialState: ->
     {value, defaultValue} = @props
@@ -403,7 +406,7 @@ DateTime = createClass
     @changeValue "time"
   
   render: ->
-    {label, help, addonBefore, addonAfter, format, datePart, timePart, noCaret, dropup, bsStyle} = @props
+    {label, help, addonBefore, addonAfter, format, datePart, timePart, dateGlyph, timeGlyph, noCaret, dropup, bsStyle} = @props
     {value, dateView} = @state
     datetime = moment value, format
     
@@ -415,7 +418,15 @@ DateTime = createClass
               noCaret: noCaret
               dropup: dropup
               bsStyle: bsStyle
-              title: datetime.format datePart
+              title: [
+                datetime.format datePart
+                if dateGlyph
+                  " "
+                if dateGlyph
+                  createElement Glyphicon,
+                    key: "glyph"
+                    glyph: dateGlyph
+              ]
               createElement MenuItem,
                 style:
                   display: if "days" is dateView then "block" else "none"
@@ -450,7 +461,15 @@ DateTime = createClass
               noCaret: noCaret
               dropup: dropup
               bsStyle: bsStyle
-              title: datetime.format timePart
+              title: [
+                datetime.format timePart
+                if timeGlyph
+                  " "
+                if timeGlyph
+                  createElement Glyphicon,
+                    key: "glyph"
+                    glyph: timeGlyph
+              ]
               createElement MenuItem,
                 header: yes
                 createElement TimePicker,
