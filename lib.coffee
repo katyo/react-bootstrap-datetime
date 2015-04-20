@@ -6,6 +6,11 @@ moment = require "moment"
 formatRegex = /([QeEAaXx]|M{1,4}o?|D{1,4}o?|d{1,4}o?|w{1,2}o?|W{1,2}o?|Y{2,4}|g{2,4}|G{2,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|S{1,3}|z{1,2}|Z{1,2})/
 
 PickerMixin =
+  propTypes: ->
+    format: PropTypes.string
+    value: PropTypes.string
+    defaultValue: PropTypes.string
+  
   getDefaultProps: ->
     format = defaultFormat
     defaultValue = (do moment).format format
