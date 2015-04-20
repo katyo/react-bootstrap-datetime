@@ -361,7 +361,6 @@ DateTime = createClass
     format: format
     datePart: "YYYY-MM-DD"
     timePart: "HH:mm:ss"
-    noCaret: yes
     dateGlyph: "calendar"
     timeGlyph: "time"
     defaultValue: (do moment).format format
@@ -409,7 +408,7 @@ DateTime = createClass
     @changeValue "time"
   
   render: ->
-    {label, help, addonBefore, addonAfter, format, datePart, timePart, dateGlyph, timeGlyph, noCaret, dropup, bsStyle} = @props
+    {label, help, addonBefore, addonAfter, format, datePart, timePart, dateGlyph, timeGlyph, dropup, bsStyle} = @props
     {value, dateView} = @state
     datetime = moment value, format
     
@@ -418,7 +417,7 @@ DateTime = createClass
         createElement ButtonGroup, null,
           if datePart
             createElement DropdownButton,
-              noCaret: noCaret
+              noCaret: yes
               dropup: dropup
               bsStyle: bsStyle
               title: [
@@ -461,7 +460,7 @@ DateTime = createClass
                   value: value
           if timePart
             createElement DropdownButton,
-              noCaret: noCaret
+              noCaret: yes
               dropup: dropup
               bsStyle: bsStyle
               title: [
