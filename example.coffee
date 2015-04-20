@@ -38,11 +38,12 @@ Example = createClass
         help: "You can to change date and time here."
       createElement DateTime,
         label: "Custom display format date"
-        help: "Link styte without caret."
+        help: "Link style without icon."
         datePart: "LL"
         timePart: no
         bsStyle: "link"
-        noCaret: yes
+        dateGlyph: no
+        locale: locale
       createElement DateTime,
         label: "Custom display format time"
         help: "With warning style applied. Current time #{time or "now"}"
@@ -51,6 +52,7 @@ Example = createClass
         timePart: "hh:mm A"
         ref: "time"
         onChange: @handleChange
+        locale: locale
       createElement DateTime,
         label: "Default 13 Jan 2008"
         help: "Drop up with succes style."
@@ -60,5 +62,6 @@ Example = createClass
         datePart: "MM/DD/YY"
         timePart: no
         dropup: yes
+        locale: locale
 
 render (createElement Example), document.getElementById "example"
