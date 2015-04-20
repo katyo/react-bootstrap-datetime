@@ -1,10 +1,10 @@
 {
   "name": "react-bootstrap-datetime",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Date and Time selects for ReactJS powered by Bootstrap 3.",
   "main": "lib.js",
   "scripts": {
-    "prepublish": "browserify lib.coffee -x moment -x react -x react-bootstrap -s react-bootstrap-datetime -do lib.js",
+    "prepublish": "browserify lib.coffee -u moment -u react -u react-bootstrap -s ReactBootstrapDateTime -do lib.js",
     "development": "watchify example.coffee -do example.js"
   },
   "repository": {
