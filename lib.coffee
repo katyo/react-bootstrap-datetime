@@ -35,32 +35,75 @@ PickerMixin =
     value: PropTypes.string
     defaultValue: PropTypes.string
     locale: PropTypes.string
+    minValue: PropTypes.string
+    maxValue: PropTypes.string
   
   getDefaultProps: ->
     locale: do moment.locale
     format: defaultFormat
     defaultValue: (do moment).format defaultFormat
+    minValue: no
+    maxValue: no
   
   getInitialState: ->
     {value, defaultValue, locale} = @props
     @setLocale? locale if locale?
     value ?= defaultValue
     {value}
+
+  applyLimits: (value, minValue, maxValue)->
+    minValue ?= @props.minValue
+    maxValue ?= @props.maxValue
+    value ?= @state.value
+    if minValue or maxValue
+      {format} = @props
+      value = moment value, format
+      value = minValue if minValue and value.isBefore (minValue = moment minValue, format)
+      value = maxValue if maxValue and value.isAfter (maxValue = moment maxValue, format)
+      value.format format
+    else
+      value
+
+  supUnits:
+    year: null
+    month: "year"
+    date: "month"
+    hour: "date"
+    minute: "hour"
+    second: "minute"
+
+  isSameBase: (units, value1, value2)->
+    supUnits = @supUnits[units]
+    not supUnits? or (value1.get supUnits) == (value2.get supUnits) and @isSameBase supUnits, value1, value2
   
-  componentWillReceiveProps: ({value, locale})->
+  getLimits: (units)->
+    {format, minValue, maxValue} = @props
+    datetime = do @getMoment
+    [
+      minValue.get units if minValue and @isSameBase units, datetime, minValue = moment minValue, format
+      maxValue.get units if maxValue and @isSameBase units, datetime, maxValue = moment maxValue, format
+    ]
+  
+  componentWillReceiveProps: ({value, locale, minValue, maxValue})->
+    value = @applyLimits value, minValue, maxValue
     # We need update value in state only when it differs from existing value
-    @setState {value} if value? and value isnt @state.value
+    @setValue value, no
     # We need reconfigure locale when it changed
     @setLocale? locale if locale? and locale isnt @props.locale
   
-  setValue: (value)->
+  setValue: (value, update = yes)->
+    {onChange} = @props
     # Set new value and call onChange handler
-    @setState {value}, @props.onChange if value? and value isnt @state.value
+    if value?
+      if value isnt @state.value
+        @setState {value}, (onChange if update)
+      else
+        do onChange if update and onChange
   
   modifyValue: (fn)->
     datetime = do @getMoment
     fn.call datetime
-    @setValue datetime.format @props.format
+    @setValue @applyLimits datetime.format @props.format
   
   parseFormat: (format)->
     format.split formatRegex
@@ -107,14 +150,14 @@ YearPicker = createClass
   
   pickYear: (year)-> =>
     @modifyValue -> @year year
-    @setState view: "days"
   
   render: ->
     datetime = do @getMoment
     
     {yearsRange} = @props
     {yearsOffset} = @state
-
+    [minYear, maxYear] = @getLimits "year"
+    
     activeYear = do datetime.year
     baseYear = activeYear + yearsOffset
     firstYear = yearsRange[0] + baseYear
@@ -152,6 +195,7 @@ YearPicker = createClass
                   createElement Button,
                     bsStyle: if year is activeYear then "primary" else "link"
                     onClick: @pickYear year
+                    disabled: minYear? and year < minYear or maxYear? and year > maxYear
                     year
 
 MonthPicker = createClass
@@ -166,10 +210,12 @@ MonthPicker = createClass
     datetime = do moment
     datetime.locale locale
     @monthName = ((datetime.month month).format "MMMM" for month in [0...12])
+  
   render: ->
     datetime = do @getMoment
 
     activeMonth = do datetime.month
+    [minMonth, maxMonth] = @getLimits "month"
 
     cols = 3
     rows = 4
@@ -186,6 +232,7 @@ MonthPicker = createClass
                 createElement Button,
                   bsStyle: if month is activeMonth then "primary" else "link"
                   onClick: @pickMon month
+                  disabled: minMonth? and month < minMonth or maxMonth? and month > maxMonth
                   @monthName[month]
 
 DatePicker = createClass
@@ -230,6 +277,8 @@ DatePicker = createClass
     
     firstDay = do ((do datetime.clone).date 1).weekday
     lastDay = do ((do datetime.clone).date monthDays).weekday
+
+    [minDate, maxDate] = @getLimits "date"
     
     table
       key: "days"
@@ -288,6 +337,7 @@ DatePicker = createClass
                   createElement Button,
                     bsStyle: if date is activeDate then "primary" else "link"
                     onClick: @pickDate date
+                    disabled: minDate? and date < minDate or maxDate? and date > maxDate
                     date
 
 TimePicker = createClass
@@ -315,6 +365,14 @@ TimePicker = createClass
   render: ->
     datetime = do @getMoment
     tokens = @parseFormat @props.display
+
+    [minHour, maxHour] = @getLimits "hour"
+    [minMin, maxMin] = @getLimits "minute"
+    [minSec, maxSec] = @getLimits "second"
+
+    hour = do datetime.hour
+    min = do datetime.minute
+    sec = do datetime.second
     
     table null,
       tbody null,
@@ -327,18 +385,21 @@ TimePicker = createClass
                   createElement Button,
                     bsStyle: "link"
                     onClick: @nextHour
+                    disabled: maxHour? and hour >= maxHour
                     createElement Glyphicon,
                       glyph: "chevron-up"
                 when /^m/.test token
                   createElement Button,
                     bsStyle: "link"
                     onClick: @nextMin
+                    disabled: maxMin? and min >= maxMin
                     createElement Glyphicon,
                       glyph: "chevron-up"
                 when /^s/.test token
                   createElement Button,
                     bsStyle: "link"
                     onClick: @nextSec
+                    disabled: maxSec? and sec >= maxSec
                     createElement Glyphicon,
                       glyph: "chevron-up"
         tr null,
@@ -377,18 +438,21 @@ TimePicker = createClass
                   createElement Button,
                     bsStyle: "link"
                     onClick: @prevHour
+                    disabled: minHour? and hour <= minHour
                     createElement Glyphicon,
                       glyph: "chevron-down"
                 when /^m/.test token
                   createElement Button,
                     bsStyle: "link"
                     onClick: @prevMin
+                    disabled: minMin? and min <= minMin
                     createElement Glyphicon,
                       glyph: "chevron-down"
                 when /^s/.test token
                   createElement Button,
                     bsStyle: "link"
                     onClick: @prevSec
+                    disabled: minSec? and sec <= minSec
                     createElement Glyphicon,
                       glyph: "chevron-down"
 
@@ -437,7 +501,7 @@ DateTime = createClass
     @updateValue "time"
   
   render: ->
-    {label, help, addonBefore, addonAfter, format, datePart, timePart, dateGlyph, timeGlyph, dropup, bsStyle, locale} = @props
+    {label, help, addonBefore, addonAfter, format, datePart, timePart, dateGlyph, timeGlyph, dropup, bsStyle, locale, minValue, maxValue} = @props
     {value, dateView} = @state
     datetime = do @getMoment
     
@@ -470,6 +534,8 @@ DateTime = createClass
                   onClickYear: @viewYears
                   onClickMonth: @viewMonths
                   value: value
+                  minValue: minValue
+                  maxValue: maxValue
               createElement MenuItem,
                 style:
                   display: if "months" is dateView then "block" else "none"
@@ -480,6 +546,8 @@ DateTime = createClass
                   format: format
                   onChange: @handleMonth
                   value: value
+                  minValue: minValue
+                  maxValue: maxValue
               createElement MenuItem,
                 style:
                   display: if "years" is dateView then "block" else "none"
@@ -490,6 +558,8 @@ DateTime = createClass
                   format: format
                   onChange: @handleYear
                   value: value
+                  minValue: minValue
+                  maxValue: maxValue
           if timePart
             createElement DropdownButton,
               noCaret: yes
@@ -513,6 +583,8 @@ DateTime = createClass
                   display: timePart
                   onChange: @handleTime
                   value: value
+                  minValue: minValue
+                  maxValue: maxValue
 
 module.exports = {
   PickerMixin

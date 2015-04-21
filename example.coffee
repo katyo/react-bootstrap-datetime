@@ -62,5 +62,16 @@ Example = createClass
         timePart: no
         dropup: yes
         locale: locale
+      createElement DateTime,
+        label: "Limited date and time"
+        help: "Date and time in localized format from 01.01.2015 to 31.12.2017 with default 10.01.2015 12:30:00."
+        bsStyle: "danger"
+        locale: locale
+        datePart: "LL"
+        timePart: "hh:mm:ss A"
+        defaultValue: "10.01.2015 12:30:00"
+        format: "DD.MM.YYYY HH:mm:ss"
+        minValue: "01.01.2015"
+        maxValue: "31.12.2017"
 
 render (createElement Example), document.getElementById "example"
