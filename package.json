@@ -1,6 +1,6 @@
 {
   "name": "react-bootstrap-datetime",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Date and Time selects for ReactJS powered by Bootstrap 3.",
   "main": "lib.js",
   "scripts": {
@@ -29,9 +29,9 @@
   "dependencies": {
   },
   "peerDependencies": {
-    "moment": "^2.10.2",
-    "react": "^0.13.1",
-    "react-bootstrap": "^0.20.3"
+    "moment": ">=2",
+    "react": ">=0.13",
+    "react-bootstrap": ">=0.20"
   },
   "devDependencies": {
     "coffee-script": "^1.9.2",
